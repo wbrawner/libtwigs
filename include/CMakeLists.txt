@@ -1,0 +1,5 @@
+file(GLOB INCLUDE_FILES "twigs/*.h")
+install(FILES
+    ${INCLUDE_FILES}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/twigs
+    )
