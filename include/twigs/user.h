@@ -5,11 +5,13 @@
 
 class User: public Identifiable {
     private:
+        std::string id;
         std::string name;
         std::string email;
         std::string avatar;
 
     public:
+        std::string getId() override;
         std::string getName();
         void setName(std::string name);
         std::string getEmail();

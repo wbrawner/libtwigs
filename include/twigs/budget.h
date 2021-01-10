@@ -1,33 +1,28 @@
 #ifndef BUDGET_H
 #define BUDGET_H
-#include <string>
 #include "hashable.h"
 #include "identifiable.h"
+#include "serializable.h"
+#include <string>
 
 using namespace std;
 
-class Budget: public Identifiable, public Hashable {
-    private:
-        string name;
-        string description;
+class Budget : public Identifiable, public Hashable, public Serializable {
+private:
+  string id;
+  string name;
+  string description;
 
-    public:
-        string getName() {
-            return this->name;
-        }
-        
-        void setName(string name) {
-            this->name = name;
-        }
-        
-        string getDescription() {
-            return this->description;
-        }
-        
-        void setDescription(string description) {
-            this->description = description;
-        }
-        
-        string hash() override;
+public:
+  Budget();
+  Budget(std::string id, std::string name, std::string description);
+  string getId() override;
+  string getName();
+  void setName(string name);
+  string getDescription();
+  void setDescription(string description);
+  string hash() override;
+  string serialize() override;
+  static Budget deserialize(std::string data);
 };
 #endif

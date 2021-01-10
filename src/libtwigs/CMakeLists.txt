@@ -25,28 +25,41 @@ set(PUBLIC_HEADERS
     ${TWIGS_INCLUDE_DIR}/twigs/hashable.h
     ${TWIGS_INCLUDE_DIR}/twigs/identifiable.h
     ${TWIGS_INCLUDE_DIR}/twigs/permission.h
+    ${TWIGS_INCLUDE_DIR}/twigs/serializable.h
     ${TWIGS_INCLUDE_DIR}/twigs/transaction.h
     ${TWIGS_INCLUDE_DIR}/twigs/user.h
+    ${TWIGS_INCLUDE_DIR}/twigs/utils.h
 )
 
 set(TWIGS_SOURCES
     budget.cpp
     #category.cpp
     transaction.cpp
+    utils.cpp
     #twigs.cpp
     #user.cpp
     )
 
-#if (NOT TARGET CURL)
-    #find_library(
-        #CURL
-        #NAMES curl libcurl
-        #PATHS /usr/local/lib /usr/local/lib64 /usr/lib /usr/lib64 /lib
-        #)
-    #if (NOT CURL)
-        #message(SEND_ERROR "Did not find curl")
-    #endif()
-#endif()
+if (NOT TARGET CURL)
+    find_library(
+        CURL
+        NAMES curl libcurl
+        PATHS /usr/local/lib /usr/local/lib64 /usr/lib /usr/lib64 /lib
+        )
+    if (NOT CURL)
+        message(SEND_ERROR "Did not find curl")
+    endif()
+endif()
+if (NOT TARGET JSONCPP)
+    find_library(
+        JSONCPP
+        NAMES jsoncpp libjsoncpp
+        PATHS /usr/local/lib /usr/local/lib64 /usr/lib /usr/lib64 /lib
+        )
+    if (NOT JSONCPP)
+        message(SEND_ERROR "Did not find jsoncpp")
+    endif()
+endif()
 #if (NOT TARGET JSONC)
     #find_library(
         #JSONC
@@ -57,31 +70,28 @@ set(TWIGS_SOURCES
         #message(SEND_ERROR "Did not find json-c")
     #endif()
 #endif()
-#if (NOT TARGET CRYPTO)
-    #find_library(
-        #CRYPTO
-        #NAMES crypto libcrypto
-        #PATHS /usr/local/lib /usr/local/lib64 /usr/lib /usr/lib64 /lib
-        #)
-    #if (NOT CRYPTO)
-        #message(SEND_ERROR "Did not find OpenSSL")
-    #endif()
-#endif()
-#if (NOT TARGET OPENSSL)
-    #find_library(
-        #OPENSSL
-        #NAMES ssl libssl
-        #PATHS /usr/local/lib /usr/local/lib64 /usr/lib /usr/lib64 /lib
-        #)
-    #if (NOT OPENSSL)
-        #message(SEND_ERROR "Did not find OpenSSL")
-    #endif()
-#endif()
+if (NOT TARGET CRYPTO)
+    find_library(
+        CRYPTO
+        NAMES crypto libcrypto
+        PATHS /usr/local/lib /usr/local/lib64 /usr/lib /usr/lib64 /lib
+        )
+    if (NOT CRYPTO)
+        message(SEND_ERROR "Did not find OpenSSL")
+    endif()
+endif()
+if (NOT TARGET OPENSSL)
+    find_library(
+        OPENSSL
+        NAMES ssl libssl
+        PATHS /usr/local/lib /usr/local/lib64 /usr/lib /usr/lib64 /lib
+        )
+    if (NOT OPENSSL)
+        message(SEND_ERROR "Did not find OpenSSL")
+    endif()
+endif()
 
-option(TWIGS_STATIC "Build Twigs as a static library" ON)
-option(TWIGS_SHARED "Build Twigs as a shared library" OFF)
-
-if (TWIGS_STATIC)
+if (BUILD_SHARED_LIBS)
     add_library(libtwigs SHARED
         ${TWIGS_SOURCES}
         ${PUBLIC_HEADERS}
@@ -93,11 +103,19 @@ else()
         )
 endif()
 
-target_include_directories(libtwigs PRIVATE
+target_include_directories(libtwigs PUBLIC
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/${TWIGS_INCLUDE_DIR}>
     $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include/twigs>
+    SYSTEM ${CMAKE_INCLUDE_PATH} 
+    SYSTEM /usr/local/include
 )
+
+target_link_libraries(libtwigs ${JSONCPP}
+    ${CURL}
+    ${CRYPTO}
+    ${OPENSSL}
+    )
 
 set_target_properties(libtwigs PROPERTIES
     OUTPUT_NAME "twigs"
@@ -106,12 +124,8 @@ set_target_properties(libtwigs PROPERTIES
     )
     
 install(TARGETS libtwigs
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    OBJECTS DESTINATION ${CMAKE_INSTALL_LIBDIR}
     )
-
-#target_link_libraries(twigs ${CURL}
-    #${JSONC}
-    #${CRYPTO}
-    #${OPENSSL}
-    #)

@@ -7,10 +7,16 @@
 
 class BudgetTest: public CppUnit::TestCase {
 public:
-    void parseDate();
-    
+    void serialize();
+    void deserialize();
+    void defaultIdsDifferent();
+    void hashBudget();
+
     CPPUNIT_TEST_SUITE( BudgetTest );
-    CPPUNIT_TEST( parseDate );
+    CPPUNIT_TEST( serialize );
+    CPPUNIT_TEST( deserialize );
+    CPPUNIT_TEST( defaultIdsDifferent );
+    CPPUNIT_TEST( hashBudget );
     CPPUNIT_TEST_SUITE_END();
 };
 

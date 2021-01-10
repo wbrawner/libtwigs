@@ -1,64 +1,38 @@
-#ifndef CATEGORY_H
 #define CATEGORY_H
-#include <string>
+#ifndef CATEGORY_H
 #include "hashable.h"
 #include "identifiable.h"
+#include "serializable.h"
+#include <string>
 
-class Category: public Identifiable, public Hashable {
-    private:
-        std::string id;
-        std::string name;
-        std::string description;
-        long amount;
-        bool expense;
-        bool archived;
-        std::string budgetId;
+class Category : public Identifiable, public Hashable, public Serializable {
+private:
+  std::string id;
+  std::string name;
+  std::string description;
+  unsigned int amount;
+  bool expense;
+  bool archived;
+  std::string budgetId;
 
-    public:
-        std::string getId() {
-            return this->id;
-        }
-        
-        std::string getName() {
-            return this->name;
-        }
-        
-        void setName(std::string name) {
-            this->name = name;
-        }
-        
-        std::string getDescription() {
-            return this->description;
-        }
-        
-        void setDescription(std::string description) {
-            this->description = description;
-        }
-        
-        long getAmount() {
-            return this->amount;
-        }
-        
-        void setAmount(long amount) {
-            this->amount = amount;
-        }
-        
-        bool isExpense() {
-            return this->expense;
-        }
-        
-        void setExpense(bool expense) {
-            this->expense = expense;
-        }
-        
-        bool isArchived() {
-            return this->archived;
-        }
-        
-        void setArchived(bool archived) {
-            this->archived = archived;
-        }
-        
-        std::string hash() override;
+public:
+  Category();
+  Category(std::string id, std::string name, std::string budgetId,
+           std::string description = "", unsigned int amount = 0,
+           bool expense = true, bool archived = false);
+  std::string getId() override;
+  std::string getName();
+  void setName(std::string name);
+  std::string getDescription();
+  void setDescription(std::string description);
+  unsigned int getAmount();
+  void setAmount(unsigned int amount);
+  bool isExpense();
+  void setExpense(bool expense);
+  bool isArchived();
+  void setArchived(bool archived);
+  std::string hash() override;
+  string serialize() override;
+  static Categpry deserialize(std::string data);
 };
 #endif

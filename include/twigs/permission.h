@@ -13,6 +13,7 @@ enum Permission {
 
 class UserPermission: public Identifiable {
     private:
+        std::string id;
         std::string userId;
         std::string budgetId;
         Permission permission;
@@ -22,6 +23,8 @@ class UserPermission: public Identifiable {
             this->userId = userId;
             this->budgetId = budgetId;
         }
+        
+        std::string getId() override;
         
         std::string getUserId() {
             return this->userId;

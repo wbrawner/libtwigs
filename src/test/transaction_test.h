@@ -7,10 +7,16 @@
 
 class TransactionTest: public CppUnit::TestCase {
 public:
-    void parseDate();
+    void serialize();
+    void deserialize();
+    void defaultIdsDifferent();
+    void hashTransaction();
     
     CPPUNIT_TEST_SUITE( TransactionTest );
-    CPPUNIT_TEST( parseDate );
+    CPPUNIT_TEST( serialize );
+    CPPUNIT_TEST( deserialize );
+    CPPUNIT_TEST( defaultIdsDifferent );
+    CPPUNIT_TEST( hashTransaction );
     CPPUNIT_TEST_SUITE_END();
 };
 
