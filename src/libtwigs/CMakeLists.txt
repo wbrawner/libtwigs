@@ -60,16 +60,6 @@ if (NOT TARGET JSONCPP)
         message(SEND_ERROR "Did not find jsoncpp")
     endif()
 endif()
-#if (NOT TARGET JSONC)
-    #find_library(
-        #JSONC
-        #NAMES json-c libjson-c
-        #PATHS /usr/local/lib /usr/local/lib64 /usr/lib /usr/lib64 /lib
-        #)
-    #if (NOT JSONC)
-        #message(SEND_ERROR "Did not find json-c")
-    #endif()
-#endif()
 if (NOT TARGET CRYPTO)
     find_library(
         CRYPTO
@@ -103,12 +93,15 @@ else()
         )
 endif()
 
+find_path(SYSTEM_INCLUDE_DIR curl/curl.h)
+message("System include dir ${SYSTEM_INCLUDE_DIR}")
+
 target_include_directories(libtwigs PUBLIC
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/${TWIGS_INCLUDE_DIR}>
     $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include/twigs>
     SYSTEM ${CMAKE_INCLUDE_PATH} 
-    SYSTEM /usr/local/include
+    SYSTEM ${SYSTEM_INCLUDE_DIR}
 )
 
 target_link_libraries(libtwigs ${JSONCPP}

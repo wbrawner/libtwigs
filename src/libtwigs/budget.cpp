@@ -1,7 +1,7 @@
 #include <string>
 #include <twigs/budget.h>
 #include <twigs/utils.h>
-#include <jsoncpp/json/json.h>
+#include <json/json.h>
 
 Budget::Budget() : Budget(util::randomId(), "", "") {}
 
